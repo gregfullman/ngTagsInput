@@ -25,7 +25,7 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
             scope.$$removeTagSymbol = options.removeTagSymbol;
 
             scope.$getDisplayText = function() {
-                return tiUtil.safeToString(scope.data[options.displayProperty]);
+                return tiUtil.safeToString(scope.data[options.displayProperty], !options.trimTags);
             };
             scope.$removeTag = function() {
                 tagsInput.removeTag(scope.$index);

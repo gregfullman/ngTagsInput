@@ -39,6 +39,7 @@
  * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
  *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
+ * @param {boolean=} [trimTags=true] Flag indicating whether tags' text should be trimmed.
  * @param {expression=} [tagClass=NA] Expression to evaluate for each existing tag in order to get the CSS classes to be used.
  *    The expression is provided with the current tag as $tag, its index as $index and its state as $selected. The result
  *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
@@ -59,7 +60,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
         var self = {}, getTagText, setTagText, canAddTag, canRemoveTag;
 
         getTagText = function(tag) {
-            return tiUtil.safeToString(tag[options.displayProperty]);
+            return tiUtil.safeToString(tag[options.displayProperty], !options.trimTags);
         };
 
         setTagText = function(tag, text) {
@@ -203,7 +204,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
-                spellcheck: [Boolean, true]
+                spellcheck: [Boolean, true],
+                trimTags: [Boolean, true]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events,
@@ -303,6 +305,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 if (value) {
                     tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
                     scope.tags = tagList.items;
+                    //ngModelCtrl.$setDirty();
                 }
                 else {
                     tagList.items = [];

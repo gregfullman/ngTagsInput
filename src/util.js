@@ -48,10 +48,10 @@ tagsInput.factory('tiUtil', function($timeout, $q) {
         return item;
     };
 
-    self.defaultComparer = function(a, b) {
+    self.defaultComparer = function(a, b, notrim) {
         // I'm aware of the internationalization issues regarding toLowerCase()
         // but I couldn't come up with a better solution right now
-        return self.safeToString(a).toLowerCase() === self.safeToString(b).toLowerCase();
+        return self.safeToString(a, notrim).toLowerCase() === self.safeToString(b, notrim).toLowerCase();
     };
 
     self.safeHighlight = function(str, value) {
@@ -72,12 +72,19 @@ tagsInput.factory('tiUtil', function($timeout, $q) {
         });
     };
 
-    self.safeToString = function(value) {
-        return angular.isUndefined(value) || value == null ? '' : value.toString().trim();
+    self.safeToString = function(value, notrim) {
+        if(angular.isUndefined(value) || value == null) {
+            return '';
+        }
+        var result = value.toString();
+        if(!notrim) {
+            result = result.trim();
+        }
+        return result;
     };
 
-    self.encodeHTML = function(value) {
-        return self.safeToString(value)
+    self.encodeHTML = function(value, notrim) {
+        return self.safeToString(value, notrim)
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
@@ -90,8 +97,8 @@ tagsInput.factory('tiUtil', function($timeout, $q) {
         };
     };
 
-    self.replaceSpacesWithDashes = function(str) {
-        return self.safeToString(str).replace(/\s/g, '-');
+    self.replaceSpacesWithDashes = function(str, notrim) {
+        return self.safeToString(str, notrim).replace(/\s/g, '-');
     };
 
     self.isModifierOn = function(event) {

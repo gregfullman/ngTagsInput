@@ -35,6 +35,7 @@ tags-input {
       line-height: $tag-height - 1px;
       border: $tag-border;
       border-radius: $tag-border-radius;
+      white-space: pre-wrap;
       @include gradient($tag-color);
 
       &.selected {
